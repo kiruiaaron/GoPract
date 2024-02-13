@@ -230,6 +230,86 @@ func testMatrix(rows, cols int) {
 	fmt.Println("===== END REPORT =====")
 }
 
+//Range -Go provides syntactic sugar to iterate over element of a slice
+func indexOfFirstWord(msg []string, badwords []string) int{
+	for i, word := range msg {
+		for _, badWord := range badwords{
+			if word == badWord{
+				return i
+			}
+		}
+	}
+	return -1
+}
+
+//Maps
+//Maps are similar to javascript objects, python dictionaries, and Ruby hashes.Maps are data structure that provides key-> value mapping.
+//The zero value of map is nil.
+
+var ages = make(map[string] int)
+ages["john"] = 37
+ages["Mary"] = 24
+ages["Mary"] = 21 //overwrites 24
+//Alternative way 
+ages = map[string]int{
+	"john":37,
+	"mary":21,
+}
+
+type user struct{
+	names string
+	phoneNumbers int
+}
+
+
+func getUserMap(names []string, phoneNumbers []int)(map[string]user,error){
+	userMap := make(map[string]user)
+	if len(names) != len(phoneNumbers){
+		return nil, errors.New("Invalid sizes")
+	}
+	for i := i< len(names); i++{
+		name := names[i]
+		phoneNumber := phoneNumbers[i]
+		userMap[name] =user{
+			name:name,
+			phoneNumber :phoneNumber,
+
+		}
+	}
+	return userMap,nil
+}
+
+
+
+//Defer in go
+//Defer keyword is fairly unique in go.It allows a function to be executed automatically just before its enclosing funtion returns.
+func logAndDelete(users ma[string]user, name string)(log string){
+	defer delete(users, name)
+	user, ok := users[name]
+	if !ok{
+		//instead of repeatedly using delete(users, name) just use defer at the top
+		return logNotFound
+	}
+	if user.admin{
+		//instead of repeatedly using delete(users, name)  just use defer at the top
+		return logAdmin
+	}
+	return logDeleted
+}
+
+
+//Closures
+//A closure is a function that references variables from outside its own function body.The function may  access and assign to the referenced variables.
+//In the example below, the concatter()function returns a function that has reference to an enclosed doc value. Each successive call to harryPotterAggregator mutates that same doc variable.
+
+func concatter() func(string) string{
+	doc := ""
+	return func(word string) string {
+		doc += word + " "
+		return doc
+	}
+}
+
 
 
 // The point of entry for execution in Go
@@ -311,5 +391,20 @@ func main() {
 	testMatrix(5,5)
 	testMatrix(10,10)
 	testMatrix(15,15)
+
+
+	//from closures
+	harryPotterAggregator := concatter()
+	harryPotterAggregator("Mr.")
+	harryPotterAggregator("and")
+	harryPotterAggregator("Mrs.")
+	harryPotterAggregator("Dursley")
+	harryPotterAggregator("of")
+	harryPotterAggregator("number")
+	harryPotterAggregator("four")
+	harryPotterAggregator("Privet")
+
+	fmt.Println(harryPotterAggregator("drive"))
+	//Mr and Mrs. Dursley of number four, Privet Drive
 
 }
